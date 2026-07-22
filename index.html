@@ -85,18 +85,29 @@
   }
   nav.index-nav a.cta::after{display:none;}
   nav.index-nav a.cta:hover{background:var(--accent-deep); color:#fff;}
-  .menu-toggle{display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none;}
-  .menu-toggle span{width:22px; height:1.5px; background:var(--ink);}
+  .menu-toggle{display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none; padding:6px; z-index:101;}
+  .menu-toggle span{width:24px; height:2px; background:var(--ink); transition:all .3s ease; transform-origin:center;}
+  .menu-toggle.active span:nth-child(1){ transform:rotate(45deg) translate(5px,5px); }
+  .menu-toggle.active span:nth-child(2){ opacity:0; transform:scaleX(0); }
+  .menu-toggle.active span:nth-child(3){ transform:rotate(-45deg) translate(5px,-5px); }
+  .menu-overlay{position:fixed; inset:0; background:rgba(14,31,56,0.5); z-index:99; opacity:0; pointer-events:none; transition:opacity .3s ease;}
+  .menu-overlay.active{ opacity:1; pointer-events:auto; }
   @media(max-width:900px){
     nav.index-nav{
-      position:fixed; inset:64px 0 0 0; background:var(--porcelain);
-      flex-direction:column; padding:40px 30px; gap:26px; align-items:flex-start;
-      transform:translateY(-8px); opacity:0; pointer-events:none;
-      transition:opacity .25s ease, transform .25s ease;
+      position:fixed; top:0; left:0; right:0; bottom:0; background:var(--porcelain); z-index:100;
+      flex-direction:column; padding:100px 40px 40px; gap:30px; align-items:flex-start;
+      transform:translateY(-100%); opacity:0; pointer-events:none;
+      transition:transform .4s cubic-bezier(.4,0,.2,1), opacity .3s ease;
+      overflow-y:auto;
     }
-    nav.index-nav.open{ opacity:1; pointer-events:auto; transform:translateY(0);}
-    nav.index-nav a{font-size:1.1rem;}
+    nav.index-nav.open{ transform:translateY(0); opacity:1; pointer-events:auto; }
+    nav.index-nav a{font-size:1.25rem; padding:12px 0; border-bottom:1px solid var(--line); width:100%;}
+    nav.index-nav a.cta{ width:auto; margin-top:16px; border-bottom:none;}
     .menu-toggle{display:flex;}
+  }
+  @media(max-width:640px){
+    nav.index-nav{ padding:90px 28px 28px; gap:24px; }
+    nav.index-nav a{ font-size:1.15rem; }
   }
 
   /* ===== HERO ===== */
@@ -304,6 +315,7 @@
     </button>
   </div>
 </header>
+<div class="menu-overlay" id="menuOverlay"></div>
 
 <section class="hero" id="topo">
   <div class="hero-media">
@@ -505,8 +517,29 @@
 <script>
   const toggle = document.getElementById('menuToggle');
   const nav = document.getElementById('indexNav');
-  toggle.addEventListener('click', () => nav.classList.toggle('open'));
-  document.querySelectorAll('#indexNav a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+  const overlay = document.getElementById('menuOverlay');
+  let menuOpen = false;
+
+  function toggleMenu() {
+    menuOpen = !menuOpen;
+    nav.classList.toggle('open', menuOpen);
+    toggle.classList.toggle('active', menuOpen);
+    overlay.classList.toggle('active', menuOpen);
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+  }
+
+  function closeMenu() {
+    menuOpen = false;
+    nav.classList.remove('open');
+    toggle.classList.remove('active');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  toggle.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', closeMenu);
+  document.querySelectorAll('#indexNav a').forEach(a => a.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeMenu(); });
 
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
