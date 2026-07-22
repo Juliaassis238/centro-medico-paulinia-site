@@ -85,7 +85,7 @@
   }
   nav.index-nav a.cta::after{display:none;}
   nav.index-nav a.cta:hover{background:var(--accent-deep); color:#fff;}
-  /* ===== MENU TOGGLE ===== */
+    /* ===== MENU TOGGLE ===== */
   .menu-toggle{
     display:none; flex-direction:column; justify-content:center; align-items:center;
     width:44px; height:44px; cursor:pointer; background:none; border:none;
@@ -102,31 +102,23 @@
   .menu-toggle.active span:nth-child(2){ opacity:0; transform:scaleX(0.1); }
   .menu-toggle.active span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
 
-  /* ===== MENU OVERLAY ===== */
-  .menu-overlay{
-    position:fixed; inset:0; background:rgba(14,31,56,0.55);
-    z-index:150; opacity:0; pointer-events:none;
-    transition:opacity .35s ease;
-  }
-  .menu-overlay.active{ opacity:1; pointer-events:auto; }
-
   /* ===== MENU MOBILE ===== */
   @media(max-width:900px){
     .menu-toggle{ display:flex; }
     nav.index-nav{
       position:fixed; top:0; left:0; right:0; bottom:0;
-      background:var(--porcelain); z-index:180;
+      background:var(--ink); z-index:150;
       flex-direction:column; align-items:stretch;
-      padding:80px 32px 40px; gap:0;
+      padding:90px 32px 40px; gap:0;
       transform:translateX(100%);
-      transition:transform .4s cubic-bezier(.4,0,.2,1);
+      transition:transform .35s cubic-bezier(.4,0,.2,1);
       overflow-y:auto;
     }
     nav.index-nav.open{ transform:translateX(0); }
     nav.index-nav a{
       font-size:1.15rem; padding:18px 0;
-      border-bottom:1px solid rgba(14,31,56,0.1);
-      color:var(--ink); width:100%;
+      border-bottom:1px solid rgba(255,255,255,0.12);
+      color:#fff; width:100%;
     }
     nav.index-nav a::after{ display:none; }
     nav.index-nav a.cta{
@@ -138,7 +130,7 @@
     nav.index-nav a.cta:hover{ background:var(--accent); color:#fff; }
   }
   @media(max-width:640px){
-    nav.index-nav{ padding:70px 24px 32px; }
+    nav.index-nav{ padding:80px 24px 32px; }
     nav.index-nav a{ font-size:1.05rem; padding:16px 0; }
   }
 
@@ -366,7 +358,6 @@
     </button>
   </div>
 </header>
-<div class="menu-overlay" id="menuOverlay"></div>
 
 <section class="hero" id="topo">
   <div class="hero-media">
@@ -574,29 +565,22 @@
 </footer>
 
 <script>
-  const toggle = document.getElementById('menuToggle');
+    const toggle = document.getElementById('menuToggle');
   const nav = document.getElementById('indexNav');
-  const overlay = document.getElementById('menuOverlay');
   let menuOpen = false;
-
   function toggleMenu() {
     menuOpen = !menuOpen;
     nav.classList.toggle('open', menuOpen);
     toggle.classList.toggle('active', menuOpen);
-    overlay.classList.toggle('active', menuOpen);
     document.body.style.overflow = menuOpen ? 'hidden' : '';
   }
-
   function closeMenu() {
     menuOpen = false;
     nav.classList.remove('open');
     toggle.classList.remove('active');
-    overlay.classList.remove('active');
     document.body.style.overflow = '';
   }
-
   toggle.addEventListener('click', toggleMenu);
-  overlay.addEventListener('click', closeMenu);
   document.querySelectorAll('#indexNav a').forEach(a => a.addEventListener('click', closeMenu));
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeMenu(); });
 
