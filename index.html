@@ -136,7 +136,10 @@
   }
   .hero-media::after{
     content:''; position:absolute; inset:0;
-    background:linear-gradient(180deg, rgba(9,18,33,0.5) 0%, rgba(9,18,33,0.32) 30%, rgba(9,18,33,0.68) 78%, rgba(7,14,26,0.92) 100%);
+    background:
+      rgba(14,31,56,0.20),
+      linear-gradient(180deg, rgba(9,18,33,0.5) 0%, rgba(9,18,33,0.32) 30%, rgba(9,18,33,0.68) 78%, rgba(7,14,26,0.92) 100%);
+    background-blend-mode:overlay;
   }
   .hero-content{
     position:relative; z-index:2; color:#fff; padding:64px 0 0;
